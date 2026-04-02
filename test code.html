@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karshi Sathi Pro Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<style>
+    :root {
+    --bg: #f4f7fe;
+    --sidebar: #ffffff;
+    --text: #1b254b;
+    --accent: #4318ff;
+    --card: #ffffff;
+    --border: #e0e7ff;
+    --muted: #a3aed0;
+}
+
+.dark-theme {
+    --bg: #0b1437;
+    --sidebar: #111c44;
+    --text: #ffffff;
+    --accent: #7551ff;
+    --card: #111c44;
+    --border: #1b254b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+.app-wrapper { display: flex; height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px 20px; }
+.logo-section { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+.logo-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 12px; display: grid; place-items: center; color: white; font-weight: 800; }
+.brand { font-weight: 800; font-size: 18px; display: block; }
+.brand span { color: #05cd99; }
+.tagline { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; }
+
+.side-nav { flex: 1; }
+.nav-group { font-size: 11px; font-weight: 800; color: var(--muted); margin: 20px 0 10px 10px; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; text-decoration: none; color: var(--muted); border-radius: 15px; margin-bottom: 5px; font-weight: 600; }
+.nav-item.active { background: var(--accent); color: white; box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2); }
+
+/* Header & Content */
+.main-body { flex: 1; display: flex; flex-direction: column; }
+.glass-header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+.header-right { display: flex; gap: 20px; }
+.theme-toggle, .notification-box { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; display: grid; place-items: center; cursor: pointer; position: relative; }
+.dot { width: 8px; height: 8px; background: #ee5d50; border-radius: 50%; position: absolute; top: 8px; right: 8px; border: 2px solid var(--card); }
+
+.scroll-content { padding: 30px 40px; overflow-y: auto; }
+.stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 30px; }
+.s-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); border: 1px solid var(--border); }
+.gradient-blue { background: linear-gradient(135deg, #4318ff, #b45fff); color: white; border: none; }
+
+.glass-card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+.chart-container canvas { margin-top: 20px; max-height: 300px; }
+
+/* Form Styles */
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+.field label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+.field input, .field select { width: 100%; padding: 12px 18px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
+.btn-primary { padding: 15px 30px; background: var(--accent); color: white; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; }
+</style>
+<body class="light-theme">
+
+    <div class="app-wrapper">
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="logo-icon">KS</div>
+                <div class="logo-text">
+                    <span class="brand">KARSHI <span>SATHI</span></span>
+                    <span class="tagline">PREMIUM AGRI-TECH</span>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <div class="nav-group">MAIN MENU</div>
+                <a href="#" class="nav-item active" onclick="navigate('dashboard', event)">
+                    <i data-lucide="layout-grid"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="navigate('active-form', event)">
+                    <i data-lucide="user-check"></i> <span>Customer Active</span>
+                </a>
+                <a href="#" class="nav-item" onclick="navigate('history', event)">
+                    <i data-lucide="bar-chart-3"></i> <span>Sales History</span>
+                </a>
+                <div class="nav-group">TEAM CONTROL</div>
+                <a href="#" class="nav-item">
+                    <i data-lucide="users-2"></i> <span>Sales Team</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-user">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=4318ff&color=fff" alt="User">
+                <div class="user-details">
+                    <p class="u-name">Lallu Yadav</p>
+                    <p class="u-role">Sales Manager</p>
+                </div>
+                <i data-lucide="log-out" class="logout-icon"></i>
+            </div>
+        </aside>
+
+        <main class="main-body">
+            <header class="glass-header">
+                <div class="header-left">
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="theme-toggle" onclick="toggleTheme()">
+                        <i data-lucide="sun" id="theme-icon"></i>
+                    </div>
+                    <div class="notification-box">
+                        <i data-lucide="bell"></i>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="scroll-content">
+                <section id="dashboard-view" class="view-section">
+                    <div class="stats-container">
+                        <div class="s-card gradient-blue">
+                            <p>Total Revenue</p>
+                            <h3>₹8,45,200</h3>
+                            <div class="progress-mini"><div style="width: 70%"></div></div>
+                        </div>
+                        <div class="s-card">
+                            <p>Active Farmers</p>
+                            <h3>2,840</h3>
+                            <span class="trend up">+14% ↑</span>
+                        </div>
+                        <div class="s-card">
+                            <p>Pending Tickets</p>
+                            <h3>12</h3>
+                            <span class="trend down">-2% ↓</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container glass-card">
+                        <div class="card-header">
+                            <h4>Weekly Sales Growth</h4>
+                            <select><option>Last 7 Days</option></select>
+                        </div>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </section>
+
+                <section id="active-form-view" class="view-section" style="display:none">
+                    <div class="glass-card form-box">
+                        <h3><i data-lucide="user-plus"></i> Activate New Customer</h3>
+                        <form id="customerForm">
+                            <div class="input-grid">
+                                <div class="field">
+                                    <label>Farmer Name</label>
+                                    <input type="text" id="fname" placeholder="Enter Full Name" required>
+                                </div>
+                                <div class="field">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="fphone" placeholder="+91 XXXX" required>
+                                </div>
+                                <div class="field">
+                                    <label>Crop Type</label>
+                                    <select id="fcrop">
+                                        <option>Wheat</option>
+                                        <option>Cotton</option>
+                                        <option>Soybean</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Location</label>
+                                    <input type="text" placeholder="Village/City">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Register & Activate</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Icons Initialize
+lucide.createIcons();
+
+// Theme Toggle
+function toggleTheme() {
+    const body = document.body;
+    const icon = document.getElementById('theme-icon');
+    
+    if(body.classList.contains('light-theme')) {
+        body.classList.replace('light-theme', 'dark-theme');
+        icon.setAttribute('data-lucide', 'moon');
+    } else {
+        body.classList.replace('dark-theme', 'light-theme');
+        icon.setAttribute('data-lucide', 'sun');
+    }
+    lucide.createIcons();
+}
+
+// Navigation Logic
+function navigate(view, event) {
+    // UI Updates
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    document.getElementById('page-title').innerText = view.replace('-', ' ').toUpperCase();
+
+    // Section Switching
+    document.getElementById('dashboard-view').style.display = view === 'dashboard' ? 'block' : 'none';
+    document.getElementById('active-form-view').style.display = view === 'active-form' ? 'block' : 'none';
+}
+
+// Chart.js - Weekly Sales Chart
+const ctx = document.getElementById('salesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+            label: 'Farmer Registration',
+            data: [400, 600, 550, 900, 800, 1100, 950],
+            borderColor: '#4318ff',
+            backgroundColor: 'rgba(67, 24, 255, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { display: false },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// Form Submit Extra Logic
+document.getElementById('customerForm').onsubmit = (e) => {
+    e.preventDefault();
+    const name = document.getElementById('fname').value;
+    alert(`Success: ${name} is now an active Karshi Sathi!`);
+};
+    </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karshi Sathi | Premium VIP Portal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0056b3;
+            --primary-light: #e7f0ff;
+            --accent: #00d2ff;
+            --success: #28a745;
+            --white: #ffffff;
+            --bg: #f8fafd;
+            --text: #2d3436;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* --- Glassmorphism Header --- */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .left-section { display: flex; align-items: center; gap: 25px; }
+        
+        .hamburger {
+            font-size: 20px; color: var(--primary); cursor: pointer;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; background: var(--primary-light); transition: var(--transition);
+        }
+        .hamburger:hover { background: var(--primary); color: white; transform: rotate(90deg); }
+
+        .brand { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .brand img { height: 50px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+        .brand-text h1 { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; line-height: 1; }
+        .brand-text span { font-size: 11px; color: #7f8c8d; text-transform: uppercase; font-weight: 500; }
+
+        .search-box {
+            flex: 0.4; background: #fff; display: flex; align-items: center;
+            padding: 12px 20px; border-radius: 50px; border: 1px solid #eee; 
+            transition: var(--transition); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 15px rgba(0,86,179,0.1); }
+        .search-box input { border: none; background: transparent; outline: none; width: 100%; padding-left: 10px; font-size: 14px; }
+        .search-box i { color: var(--primary); }
+
+        .profile-trigger {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff; width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+            box-shadow: 0 8px 15px rgba(0, 86, 179, 0.2);
+        }
+        .profile-trigger:hover { transform: translateY(-3px); box-shadow: 0 12px 20px rgba(0, 86, 179, 0.3); }
+
+        /* --- Shared Sidebar Styles --- */
+        .side-panel {
+            position: fixed; top: 0; height: 100%; width: 320px;
+            background: var(--white); z-index: 2000; transition: var(--transition);
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+        }
+        
+        .close-icon {
+            position: absolute; top: 20px; cursor: pointer;
+            width: 35px; height: 35px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .close-icon:hover { background: rgba(255,255,255,0.4); transform: scale(1.1); }
+
+        /* Left Sidebar */
+        #sidebar { left: -350px; border-radius: 0 25px 25px 0; }
+        #sidebar.active { left: 0; }
+        #sidebar .close-icon { right: 20px; }
+
+        /* Right Panel */
+        #profilePanel { right: -350px; border-radius: 25px 0 0 25px; }
+        #profilePanel.active { right: 0; }
+        #profilePanel .close-icon { left: 20px; }
+
+        .panel-header {
+            padding: 50px 30px 30px;
+            background: linear-gradient(135deg, var(--primary), #003d80);
+            color: white; position: relative;
+        }
+
+        .avatar-box {
+            width: 70px; height: 70px; background: rgba(255,255,255,0.2);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 700; border: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+        }
+
+        /* --- Menu Items Design --- */
+        .menu-items { padding: 20px 15px; flex-grow: 1; overflow-y: auto; }
+        .nav-item {
+            display: flex; align-items: center; gap: 15px; padding: 14px 18px;
+            text-decoration: none; color: var(--text); font-weight: 500;
+            border-radius: 15px; transition: var(--transition); margin-bottom: 5px;
+        }
+        .nav-item i { width: 25px; color: var(--primary); font-size: 18px; }
+        .nav-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        /* --- Overlay --- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0, 8, 20, 0.4);
+            backdrop-filter: blur(4px); display: none; z-index: 1500;
+        }
+        .overlay.active { display: block; }
+
+        .logout-btn {
+            margin: 20px; padding: 15px; border: none; border-radius: 15px;
+            background: #fff0f0; color: #d63031; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: #d63031; color: white; }
+
+        @media (max-width: 768px) {
+            header { padding: 0 20px; }
+            .search-box { display: none; }
+            .brand-text span { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<nav class="side-panel" id="sidebar">
+    <div class="panel-header">
+        <div class="close-icon" onclick="closeAll()"><i class="fas fa-xmark"></i></div>
+        <div class="avatar-box"><i class="fa fa-seedling"></i></div>
+        <h2 style="font-size: 18px;">Navigation</h2>
+        <p style="font-size: 12px; opacity: 0.8;">Explore Services</p>
+    </div>
+    <div class="menu-items">
+        <a href="#" class="nav-item"><i class="fa fa-home"></i> Home</a>
+        <a href="#" class="nav-item"><i class="fa fa-chart-line"></i> Live Mandi Bhav</a>
+        <a href="#" class="nav-item"><i class="fa fa-cloud-sun"></i> Weather Forecast</a>
+        <a href="#" class="nav-item"><i class="fa fa-landmark"></i> Government Schemes</a>
+        <a href="#" class="nav-item"><i class="fa fa-tractor"></i> Buy Machinery</a>
+    </div>
+</nav>
+
+<div class="side-panel" id="profilePanel">
+    <div class="panel-header">
+        <div class="close-icon" onclick="closeAll()"><i class="fas fa-xmark"></i></div>
+        <div class="avatar-box">MY</div>
+        <h2 style="font-size: 18px;">MUKESH Yadav</h2>
+        <p style="font-size: 12px; opacity: 0.8;">265354170</p>
+    </div>
+    <div class="menu-items">
+        <div class="nav-item"><i class="fas fa-user-plus"></i> Add Profile</div>
+        <div class="nav-item"><i class="fas fa-wallet"></i> Wallet History</div>
+        <div class="nav-item"><i class="fas fa-location-dot"></i> Track Order</div>
+        <div class="nav-item"><i class="fas fa-gear"></i> Settings</div>
+        <div class="nav-item"><i class="fas fa-headset"></i> Help Center</div>
+    </div>
+    <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+</div>
+
+<header>
+    <div class="left-section">
+        <div class="hamburger" onclick="toggleSidebar()">
+            <i class="fa fa-bars"></i>
+        </div>
+        <a href="#" class="brand">
+            <img src="https://cdn-icons-png.flaticon.com/512/2610/2610284.png" alt="Logo">
+            <div class="brand-text">
+                <h1>KARSHI SATHI</h1>
+                <span>Apka Digital Kheti Sathi</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input type="text" placeholder="Search Mandi, Crops, or Services...">
+    </div>
+
+    <div class="profile-trigger" onclick="toggleProfile()">
+        <i class="fas fa-user-gear"></i>
+    </div>
+</header>
+    <style>
+        :root {
+            --bg-body: #f0f2f5;
+            --white: #ffffff;
+            --text-main: #202124;
+            --text-sub: #5f6368;
+            --prime-blue: #1a73e8;
+            --green-leaf: #2e7d32;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+
+        /* --- Full Width Container (Margin 0) --- */
+        .main-wrapper { width: 100%; padding: 20px 10px; }
+
+        .header-text { padding: 10px; margin-bottom: 20px; }
+        .header-text h2 { font-size: 24px; font-weight: 700; color: #000; }
+        .header-text p { color: var(--text-sub); font-size: 14px; margin-top: 5px; }
+
+        /* --- Grid System --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* --- Card Styling (Same as Screenshot) --- */
+        .category-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #dadce0;
+            transition: 0.2s ease-in-out;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .category-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: var(--prime-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Icon Boxes with Colors from image_8d34d0.png */
+        .icon-sq {
+            width: 60px; height: 60px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0;
+        }
+
+        .bg-pension { background: #f1f8e9; color: #558b2f; } /* Greenish */
+        .bg-student { background: #fff3e0; color: #ef6c00; } /* Orange/Yellow */
+        .bg-utility { background: #f3e5f5; color: #7b1fa2; } /* Purple */
+        .bg-farmer { background: #e3f2fd; color: #1565c0; }  /* Blue */
+        .bg-kapaas { background: #fce4ec; color: #c2185b; }  /* Pinkish */
+        .bg-weather { background: #e0f7fa; color: #00838f; } /* Cyan */
+
+        .info-box h3 { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .info-box p { font-size: 13px; color: var(--text-sub); line-height: 1.3; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .category-card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="header-text">
+        <h2>Categories</h2>
+        <p>Karshi Sathi Digital Portal - Sabhi suvidhayen ab kisaanon ki hatheli par.</p>
+    </div>
+
+    <div class="grid-container">
+        
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-kapaas">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <div class="info-box">
+                <h3>Kapaas Slot Booking</h3>
+                <p>Mandi mein kapaas bechne ke liye apna slot abhi book karein.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-pension">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <div class="info-box">
+                <h3>Fasal Salah (Crop Advice)</h3>
+                <p>Expert se jaaniye apni fasal ko beemari se kaise bachayein.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-student">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+            <div class="info-box">
+                <h3>Taza Mandi Bhav</h3>
+                <p>Sabhi mandiyon ke live rate aur bazar ki poori jaankari.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-weather">
+                <i class="fa-solid fa-cloud-sun-rain"></i>
+            </div>
+            <div class="info-box">
+                <h3>Mausam ki Jaankari</h3>
+                <p>Agle 7 dino ka sateek anuman aur baarish ki chetavani.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-utility">
+                <i class="fa-solid fa-flask-vial"></i>
+            </div>
+            <div class="info-box">
+                <h3>Mitti Parikshan (Soil Test)</h3>
+                <p>Apni khet ki mitti ki jaanch karayein aur paidavar badhayein.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-farmer">
+                <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div class="info-box">
+                <h3>Sarkari Yojanaen</h3>
+                <p>PM-Kisan, Fasal Bima aur sabhi subsidyon ki jaankari.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-pension">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <div class="info-box">
+                <h3>Beej aur Khaad Store</h3>
+                <p>Top quality beej aur organic fertilizer ghar baithe mangvayein.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-utility">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="info-box">
+                <h3>Khet-Majdoor Jobs</h3>
+                <p>Kheti aur tractor driving se jude rozgaar ke naye avsar.</p>
+            </div>
+        </a>
+
+        <a href="#" class="category-card">
+            <div class="icon-sq bg-farmer">
+                <i class="fa-solid fa-tractor"></i>
+            </div>
+            <div class="info-box">
+                <h3>Kiraye par Upkaran</h3>
+                <p>Tractor, Harvester aur anya auzaar kiraye par lein.</p>
+            </div>
+        </a>
+        
+
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const profilePanel = document.getElementById('profilePanel');
+    const overlay = document.getElementById('overlay');
+
+    function toggleSidebar() {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        profilePanel.classList.remove('active');
+    }
+
+    function toggleProfile() {
+        profilePanel.classList.add('active');
+        overlay.classList.add('active');
+        sidebar.classList.remove('active');
+    }
+
+    function closeAll() {
+        sidebar.classList.remove('active');
+        profilePanel.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+</script>
+
+</body>
+</html>

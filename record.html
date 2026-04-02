@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishi Sathi | Master Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --sidebar-bg: #404e67;
+            --accent-green: #2ed8b6;
+            --bg-light: #f6f7fb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-light); display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- Sidebar --- */
+        .sidebar { width: 270px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+        .sidebar-user { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-user img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid var(--accent-green); margin-bottom: 10px; }
+        .nav-link { display: flex; align-items: center; gap: 15px; padding: 14px 25px; color: #d1d9e5; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: #354054; color: white; border-left: 4px solid var(--accent-green); }
+
+        /* --- Main --- */
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        header { background: white; height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        .timer-box { background: #404e67; color: white; padding: 8px 15px; border-radius: 5px; font-weight: 700; font-family: monospace; font-size: 18px; border-bottom: 3px solid var(--accent-green); }
+
+        /* --- Sheet Styling --- */
+        .content-body { padding: 25px; overflow-y: auto; flex-grow: 1; }
+        .sheet-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #edf2f7; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #404e67; }
+
+        .id-badge { background: #eef2ff; color: #4f46e5; padding: 3px 8px; border-radius: 4px; font-weight: 600; font-family: monospace; }
+        .cust-badge { background: #ecfdf5; color: #059669; padding: 3px 8px; border-radius: 4px; font-weight: 600; font-family: monospace; }
+        
+        .btn-action { background: var(--accent-green); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=2ed8b6&color=fff" alt="User">
+            <span style="display:block; font-weight:600;">Arjun Singh</span>
+            <small style="color:var(--accent-green)">EMP ID: #KS-2026</small>
+        </div>
+        <nav style="padding:15px 0;">
+            <a href="#" class="nav-link active"><i class="fas fa-file-invoice"></i> Master Sheet</a>
+            <a href="#" class="nav-link"><i class="fas fa-history"></i> Attendance History</a>
+            <a href="#" class="nav-link" onclick="downloadPDF()"><i class="fas fa-download"></i> Download PDF Report</a>
+            <a href="#" class="nav-link" style="color:#ff5252; margin-top:20px;" onclick="resetTimer()"><i class="fas fa-power-off"></i> Reset & Save Session</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header>
+            <div style="background:#f1f5f9; padding:8px 15px; border-radius:8px; width:300px; display:flex; align-items:center;">
+                <i class="fas fa-search" style="color:#abb5c4;"></i>
+                <input type="text" placeholder="Search ID or Name..." id="searchInput" onkeyup="filterSheet()" style="border:none; background:transparent; outline:none; margin-left:10px; width:100%;">
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <small style="font-weight:700; color:#888;">SESSION TIMER</small>
+                <div class="timer-box" id="timer">00:00:00</div>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <div class="sheet-card">
+                <h4 style="margin-bottom:15px; color:#404e67;">Customer Data Master Sheet</h4>
+                <table id="masterTable">
+                    <thead>
+                        <tr>
+                            <th>Rec ID</th>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Location</th>
+                            <th>Service Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td><span class="id-badge">REC-9912</span></td>
+                            <td><span class="cust-badge">CUST-884</span></td>
+                            <td><b>Rajesh Kumar</b></td>
+                            <td>Indore, MP</td>
+                            <td>Soil Testing</td>
+                            <td style="color:var(--accent-green); font-weight:700;">Active</td>
+                        </tr>
+                        <tr>
+                            <td><span class="id-badge">REC-9913</span></td>
+                            <td><span class="cust-badge">CUST-302</span></td>
+                            <td><b>Suresh Yadav</b></td>
+                            <td>Ghaziabad, UP</td>
+                            <td>Seed Supply</td>
+                            <td style="color:#ff5252; font-weight:700;">Pending</td>
+                        </tr>
+                        <tr>
+                            <td><span class="id-badge">REC-9914</span></td>
+                            <td><span class="cust-badge">CUST-551</span></td>
+                            <td><b>Anil Sharma</b></td>
+                            <td>Ujjain, MP</td>
+                            <td>Equipment</td>
+                            <td style="color:var(--accent-green); font-weight:700;">Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="sheet-card" style="border-top: 4px solid var(--sidebar-bg);">
+                <h4 style="margin-bottom:15px; color:#404e67;">My Session Timing History</h4>
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Login Time</th>
+                            <th>Logout Time</th>
+                            <th>Work Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Timer Logic ---
+        let totalSec = localStorage.getItem('ks_timer_sec') ? parseInt(localStorage.getItem('ks_timer_sec')) : 0;
+        let loginT = localStorage.getItem('ks_start') || new Date().toLocaleTimeString();
+        if(!localStorage.getItem('ks_start')) localStorage.setItem('ks_start', loginT);
+
+        function runTimer() {
+            totalSec++;
+            localStorage.setItem('ks_timer_sec', totalSec);
+            let h = Math.floor(totalSec/3600);
+            let m = Math.floor((totalSec%3600)/60);
+            let s = totalSec%60;
+            document.getElementById('timer').innerText = 
+                (h<10?'0'+h:h)+":"+(m<10?'0'+m:m)+":"+(s<10?'0'+s:s);
+        }
+        setInterval(runTimer, 1000);
+
+        function resetTimer() {
+            if(confirm("Session save karein?")) {
+                let session = {
+                    date: new Date().toLocaleDateString(),
+                    in: localStorage.getItem('ks_start'),
+                    out: new Date().toLocaleTimeString(),
+                    dur: document.getElementById('timer').innerText
+                };
+                let logs = JSON.parse(localStorage.getItem('ks_logs') || "[]");
+                logs.push(session);
+                localStorage.setItem('ks_logs', JSON.stringify(logs));
+                localStorage.setItem('ks_timer_sec', 0);
+                localStorage.removeItem('ks_start');
+                location.reload();
+            }
+        }
+
+        // --- Load History ---
+        window.onload = function() {
+            let logs = JSON.parse(localStorage.getItem('ks_logs') || "[]");
+            let html = "";
+            logs.reverse().forEach(l => {
+                html += `<tr><td>${l.date}</td><td>${l.in}</td><td>${l.out}</td><td style="font-weight:700; color:var(--accent-green)">${l.dur}</td></tr>`;
+            });
+            document.getElementById('historyBody').innerHTML = html;
+        }
+
+        // --- Search Filter ---
+        function filterSheet() {
+            let val = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
+            for(let r of rows) {
+                r.style.display = r.innerText.toUpperCase().includes(val) ? "" : "none";
+            }
+        }
+
+        // --- PDF Report ---
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(16);
+            doc.text("Krishi Sathi - Professional Record Sheet", 14, 15);
+            doc.autoTable({ html: '#masterTable', startY: 25, theme: 'grid', headStyles: {fillColor: [64, 78, 103]} });
+            doc.addPage();
+            doc.text("Timing History Report", 14, 15);
+            doc.autoTable({ html: '#historyTable', startY: 25, theme: 'striped' });
+            doc.save("Krishi_Sathi_Master_Report.pdf");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karshi Sathi | Unique Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://images.unsplash.com/photo-1495107336281-199c158ea171?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        /* Animated Overlay Background */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.8), rgba(13, 71, 16, 0.9));
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            width: 850px;
+            height: 550px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+        }
+
+        /* --- Sliding Blue Overlay --- */
+        .overlay-container {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, #2e7d32, #66bb6a);
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container.active .overlay-container { transform: translateX(-100%); }
+
+        .overlay-content h2 { font-size: 32px; margin-bottom: 15px; }
+        .overlay-content p { font-size: 14px; opacity: 0.9; margin-bottom: 30px; }
+
+        .ghost-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .ghost-btn:hover { background: white; color: #2e7d32; }
+
+        /* --- Forms Styling --- */
+        .form-container {
+            width: 50%;
+            height: 100%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: 0.6s ease-in-out;
+        }
+
+        .login-form { position: absolute; left: 0; z-index: 5; }
+        .register-form { position: absolute; left: 0; opacity: 0; z-index: 1; }
+
+        .container.active .login-form { transform: translateX(100%); opacity: 0; }
+        .container.active .register-form { transform: translateX(100%); opacity: 1; z-index: 5; }
+
+        h1 { color: #fff; margin-bottom: 20px; font-size: 28px; text-align: center; }
+        
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group i { position: absolute; left: 15px; top: 40px; color: #2e7d32; }
+        .input-group label { display: block; color: #ddd; font-size: 12px; margin-bottom: 5px; }
+        .input-group input {
+            width: 100%; padding: 12px 12px 12px 40px;
+            background: rgba(255,255,255,0.9);
+            border: none; border-radius: 12px; outline: none;
+        }
+
+        .submit-btn {
+            background: #2e7d32; color: white; border: none;
+            padding: 14px; width: 100%; border-radius: 12px;
+            font-weight: 700; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- Social Links --- */
+        .social-login { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .social-login i { 
+            width: 40px; height: 40px; background: white; 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; color: #2e7d32; cursor: pointer; 
+        }
+
+        @media (max-width: 768px) {
+            .container { width: 90%; height: auto; flex-direction: column; }
+            .overlay-container { display: none; }
+            .form-container { width: 100%; padding: 30px; }
+            .register-form { position: relative; display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <div class="form-container login-form">
+        <h1>Farmer Login</h1>
+        <form id="loginLogic">
+            <div class="input-group">
+                <label>User ID / Mobile</label>
+                <i class="fa fa-user"></i>
+                <input type="text" placeholder="9399xxxxxx" id="l_user" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="••••••••" id="l_pass" required>
+            </div>
+            <button type="submit" class="submit-btn">SIGN IN</button>
+        </form>
+        <div class="social-login">
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-google"></i>
+            <i class="fab fa-whatsapp"></i>
+        </div>
+    </div>
+
+    <div class="form-container register-form">
+        <h1>Join Us</h1>
+        <form>
+            <div class="input-group">
+                <label>Full Name</label>
+                <i class="fa fa-user-tag"></i>
+                <input type="text" placeholder="Enter Name">
+            </div>
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <i class="fa fa-phone"></i>
+                <input type="text" placeholder="+91 xxxxx">
+            </div>
+            <div class="input-group">
+                <label>Create Password</label>
+                <i class="fa fa-key"></i>
+                <input type="password" placeholder="••••••••">
+            </div>
+            <button type="button" class="submit-btn">REGISTER NOW</button>
+        </form>
+    </div>
+
+    <div class="overlay-container">
+        <div class="overlay-content" id="overlayLeft">
+            <h2>Welcome Back!</h2>
+            <p>To keep connected with your farm updates, please login with your info.</p>
+            <button class="ghost-btn" id="signInBtn">NEW HERE? REGISTER</button>
+        </div>
+        <div class="overlay-content" id="overlayRight" style="display: none;">
+            <h2>Namaste, Kisan!</h2>
+            <p>Enter your details and start your journey with Karshi Sathi.</p>
+            <button class="ghost-btn" id="signUpBtn">ALREADY REGISTERED? LOGIN</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const container = document.getElementById('mainContainer');
+    const signInBtn = document.getElementById('signInBtn');
+    const signUpBtn = document.getElementById('signUpBtn');
+    const overlayLeft = document.getElementById('overlayLeft');
+    const overlayRight = document.getElementById('overlayRight');
+
+    // Toggle Animation Logic
+    signInBtn.addEventListener('click', () => {
+        container.classList.add('active');
+        overlayLeft.style.display = 'none';
+        overlayRight.style.display = 'block';
+    });
+
+    signUpBtn.addEventListener('click', () => {
+        container.classList.remove('active');
+        overlayLeft.style.display = 'block';
+        overlayRight.style.display = 'none';
+    });
+
+    // Simple Login Check (Using your data)
+    const ADMINS = [{id: "7987025943", pass: "01234", name: "Yash", page: "admin.html"}];
+    const USERS = [{id: "9399497595", pass: "pss0123", name: "Mukesh", page: "mukesh.html"}];
+
+    document.getElementById('loginLogic').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const u = document.getElementById('l_user').value;
+        const p = document.getElementById('l_pass').value;
+
+        const isAdmin = ADMINS.find(x => x.id === u && x.pass === p);
+        const isUser = USERS.find(x => x.id === u && x.pass === p);
+
+        if(isAdmin) { window.location.href = isAdmin.page; }
+        else if(isUser) { window.location.href = isUser.page; }
+        else { alert("Galat Details! Sahi ID/Password daalein."); }
+    });
+</script>
+
+</body>
+</html>

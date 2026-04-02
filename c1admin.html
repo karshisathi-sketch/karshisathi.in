@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishi Sathi | Professional Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-bg: #404e67; /* Image wala exact shade */
+            --sidebar-active: #354054;
+            --accent-green: #2ed8b6;
+            --text-gray: #abb5c4;
+            --bg-light: #f6f7fb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-light); display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- Sidebar (Premium Look) --- */
+        .sidebar {
+            width: 270px;
+            background: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Sidebar Employee Header */
+        .sidebar-user {
+            padding: 30px 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-user img {
+            width: 70px; height: 70px; border-radius: 50%;
+            border: 3px solid var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .emp-name { display: block; font-size: 16px; font-weight: 600; }
+        .emp-id { font-size: 12px; color: var(--accent-green); font-weight: 500; }
+
+        .sidebar-nav { padding: 15px 0; }
+        .nav-label {
+            padding: 10px 25px; font-size: 11px; font-weight: 700;
+            color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 15px;
+            padding: 14px 25px; color: #d1d9e5; text-decoration: none;
+            font-size: 14px; transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--sidebar-active);
+            color: white;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .nav-link i { width: 20px; text-align: center; }
+
+        /* --- Main Content --- */
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        header {
+            background: white; height: 70px; display: flex;
+            justify-content: space-between; align-items: center;
+            padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-box {
+            background: #f1f5f9; padding: 10px 20px;
+            border-radius: 8px; display: flex; align-items: center; width: 350px;
+        }
+
+        .search-box input { border: none; background: transparent; outline: none; width: 100%; margin-left: 10px; }
+
+        .timer-box {
+            background: #404e67; color: white; padding: 8px 15px;
+            border-radius: 5px; font-weight: 700; font-family: monospace;
+            font-size: 18px; border-bottom: 3px solid var(--accent-green);
+        }
+
+        /* --- Dynamic Content --- */
+        .content-body { padding: 30px; overflow-y: auto; flex-grow: 1; }
+
+        /* Image Placeholder instead of Dashboard Cards */
+        .main-banner {
+            width: 100%; height: 350px;
+            background: #e2e8f0; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 30px; position: relative;
+            overflow: hidden;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .main-banner::after {
+            content: 'DASHBOARD REPLACED WITH IMAGE - ADD YOUR IMG HERE';
+            color: #64748b; font-weight: 600; font-size: 14px;
+        }
+
+        .main-banner img { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; }
+
+        /* Goal (Rounded) Action Cards */
+        .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+        .goal-card {
+            background: white; border-radius: 30px; padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            text-decoration: none; color: inherit; transition: 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .goal-card:hover { transform: translateY(-5px); border-color: var(--accent-green); }
+
+        .card-title { font-weight: 700; color: #404e67; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        .form-mini { background: #f9fafb; padding: 15px; border-radius: 20px; }
+        .form-mini input { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 12px; }
+        .form-btn { width: 100%; padding: 10px; background: var(--accent-green); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=2ed8b6&color=fff" alt="Employee">
+            <span class="emp-name">Arjun Singh</span>
+            <span class="emp-id">EMP ID: #KS-2026-99</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Navigation</div>
+            <a href="#" class="nav-link active"><i class="fas fa-home"></i> Home View</a>
+            <a href="#" class="nav-link"><i class="fas fa-user-check"></i> Active Users</a>
+            <a href="#" class="nav-link"><i class="fas fa-user-slash"></i> Unactive Users</a>
+            
+            <div class="nav-label">Management</div>
+            <a href="#" class="nav-link"><i class="fas fa-database"></i> All Records</a>
+            <a href="#" class="nav-link"><i class="fas fa-shield-halved"></i> Subscription Active</a>
+            <a href="#" class="nav-link"><i class="fas fa-file-pen"></i> Forms Active</a>
+            
+            <div class="nav-label">Company</div>
+            <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Mandi Rates</a>
+            <a href="#" class="nav-link"><i class="fas fa-users-gear"></i> Update Team</a>
+            <a href="#" class="nav-link" style="color: #ff5252;" onclick="resetTimer()"><i class="fas fa-power-off"></i> Reset Timer</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header>
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #abb5c4;"></i>
+                <input type="text" placeholder="Search Customer Name or ID..." id="userSearch">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="text-align: right; line-height: 1;">
+                    <small style="color: #888; font-size: 10px; font-weight: 700;">LIVE SESSION</small>
+                    <div class="timer-box" id="timer">00:00:00</div>
+                </div>
+                <i class="fas fa-bell" style="color: #404e67; font-size: 20px; cursor: pointer;"></i>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <div class="main-banner">
+                <img src="https://img.freepik.com/free-vector/modern-agriculture-technology-banner_107791-3897.jpg" alt="Company Banner">
+            </div>
+
+            <div class="action-grid">
+                
+                <div class="goal-card">
+                    <div class="card-title">
+                        <span>Rajesh (ID: 884)</span>
+                        <span style="color: var(--accent-green); font-size: 12px;"><i class="fas fa-circle"></i> Online</span>
+                    </div>
+                    <div class="form-mini">
+                        <input type="text" placeholder="Update Service Status">
+                        <button class="form-btn">Update Record</button>
+                    </div>
+                    <a href="#" style="font-size: 11px; display: block; margin-top: 10px; text-decoration: none; color: #404e67; font-weight: 600;">Click to view Subscription →</a>
+                </div>
+
+                <div class="goal-card">
+                    <div class="card-title">
+                        <span>Suresh (ID: 302)</span>
+                        <span style="color: #ff5252; font-size: 12px;"><i class="fas fa-circle"></i> Offline</span>
+                    </div>
+                    <div class="form-mini">
+                        <input type="text" placeholder="Add Survey Note">
+                        <button class="form-btn">Save Form</button>
+                    </div>
+                    <a href="#" style="font-size: 11px; display: block; margin-top: 10px; text-decoration: none; color: #404e67; font-weight: 600;">Click to view Subscription →</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. Persistent Login Timer (LocalStorage) ---
+        let totalSeconds = localStorage.getItem('ks_timer_sec') ? parseInt(localStorage.getItem('ks_timer_sec')) : 0;
+
+        function updateTimer() {
+            totalSeconds++;
+            localStorage.setItem('ks_timer_sec', totalSeconds);
+            
+            let h = Math.floor(totalSeconds / 3600);
+            let m = Math.floor((totalSeconds % 3600) / 60);
+            let s = totalSeconds % 60;
+            
+            document.getElementById('timer').innerText = 
+                (h < 10 ? '0' + h : h) + ":" + 
+                (m < 10 ? '0' + m : m) + ":" + 
+                (s < 10 ? '0' + s : s);
+        }
+        setInterval(updateTimer, 1000);
+
+        function resetTimer() {
+            if(confirm("Session reset karein?")) {
+                localStorage.setItem('ks_timer_sec', 0);
+                totalSeconds = 0;
+            }
+        }
+    </script>
+    
+</body>
+</html>
